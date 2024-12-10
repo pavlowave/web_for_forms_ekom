@@ -99,13 +99,18 @@
             });
 
             const result = await response.json();
-            document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+
+            if (result.field_types) {
+                document.getElementById('result').textContent = JSON.stringify(result.field_types, null, 2);
+            } else {
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            }
         }
     </script>
 </head>
 <body>
     <h1>Web-приложение для определения заполненных форм</h1>
-    <h2>Валидируется 4 типа данных полей, остальные кастомные, будут text.
+    <h2>Валидируется 4 типа данных полей, остальные кастомные, будут text
         1)Дата
         2)Телефон
         3)Email

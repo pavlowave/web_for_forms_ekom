@@ -5,7 +5,7 @@
             "fields": {
                 "email": "email",
                 "phone": "phone",
-                "order_date": "date"
+                "date": "date"
             }
         },
         "2": {
@@ -13,14 +13,14 @@
             "fields": {
                 "email": "email",
                 "user_name": "text",
-                "birth_date": "date"
+                "date": "date"
             }
         },
         "3": {
             "name": "Contact Form",
             "fields": {
                 "user_name": "text",
-                "lead_email": "email",
+                "email": "email",
                 "phone": "phone"
             }
         }

@@ -15,7 +15,7 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "email",
                 "phone": "phone",
-                "order_date": "date"
+                "date": "date"
             }
         })
         cls.db.insert({
@@ -23,14 +23,14 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "email",
                 "user_name": "text",
-                "birth_date": "date"
+                "date": "date"
             }
         })
         cls.db.insert({
             "name": "Contact Form",
             "fields": {
                 "user_name": "text",
-                "lead_email": "email",
+                "email": "email",
                 "phone": "phone"
             }
         })
@@ -45,7 +45,7 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "test@example.com",
                 "phone": "+7 999 999 99 99",
-                "order_date": "2024-12-09"
+                "date": "2024-12-09"
             }
         }
 
@@ -62,7 +62,7 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "test@mail.ru",
                 "phone": "+79999999999",
-                "order_date": "2024-12-09",
+                "date": "2024-12-09",
                 "user_name": "ExtraUser"
             }
         }
@@ -80,19 +80,15 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "invalid-email",
                 "phone": "+7 999 999 99 99",
-                "order_date": "2024-12-09"
+                "date": "2024-12-09"
             }
         }
 
         response = self.client.post('/get_form/', data, format='json')
 
-        self.assertIn("email", response.data, "Ответ не содержит ключ 'email'")
-        self.assertIn("phone", response.data, "Ответ не содержит ключ 'phone'")
-        self.assertIn("order_date", response.data, "Ответ не содержит ключ 'order_date'")
-
-        self.assertEqual(response.data["email"], "text")
-        self.assertEqual(response.data["phone"], "phone")
-        self.assertEqual(response.data["order_date"], "date")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("email", response.data["field_types"], "Ответ не содержит ключ 'email'")
+        self.assertEqual(response.data["field_types"]["email"], "text")
 
     def test_invalid_phone(self):
         """
@@ -102,19 +98,20 @@ class FormMatchingViewTests(unittest.TestCase):
             "fields": {
                 "email": "test@example.com",
                 "phone": "12345",
-                "order_date": "2024-12-09"
+                "date": "2024-12-09"
             }
         }
 
         response = self.client.post('/get_form/', data, format='json')
 
-        self.assertIn("email", response.data)
-        self.assertIn("phone", response.data)
-        self.assertIn("order_date", response.data)
+        self.assertIn("email", response.data["field_types"], "Ответ не содержит ключ 'email'")
+        self.assertIn("phone", response.data["field_types"], "Ответ не содержит ключ 'phone'")
+        self.assertIn("date", response.data["field_types"], "Ответ не содержит ключ 'date'")
 
-        self.assertEqual(response.data["email"], "email")
-        self.assertEqual(response.data["phone"], "text")
-        self.assertEqual(response.data["order_date"], "date")
+        self.assertEqual(response.data["field_types"]["email"], "email")
+        self.assertEqual(response.data["field_types"]["phone"], "text")
+        self.assertEqual(response.data["field_types"]["date"], "date")
+
 
     def test_missing_required_field(self):
         """
@@ -130,12 +127,15 @@ class FormMatchingViewTests(unittest.TestCase):
         response = self.client.post('/get_form/', data, format='json')
 
         self.assertEqual(response.status_code, 200)
+
         self.assertIsNone(response.data.get("template_name"))
 
-        self.assertIn("email", response.data)
-        self.assertIn("phone", response.data)
-        self.assertEqual(response.data["email"], "email")
-        self.assertEqual(response.data["phone"], "phone")
+        self.assertIn("email", response.data["field_types"], "Ответ не содержит ключ 'email'")
+        self.assertIn("phone", response.data["field_types"], "Ответ не содержит ключ 'phone'")
+
+        self.assertEqual(response.data["field_types"]["email"], "email")
+        self.assertEqual(response.data["field_types"]["phone"], "phone")
+
 
     def test_template_not_found(self):
         """
@@ -152,14 +152,17 @@ class FormMatchingViewTests(unittest.TestCase):
         response = self.client.post('/get_form/', data, format='json')
 
         self.assertEqual(response.status_code, 200)
+
         self.assertIsNone(response.data.get("template_name"))
 
-        self.assertIn("email", response.data)
-        self.assertIn("phone", response.data)
-        self.assertIn("nonexistent_field", response.data)
-        self.assertEqual(response.data["email"], "email")
-        self.assertEqual(response.data["phone"], "phone")
-        self.assertEqual(response.data["nonexistent_field"], "text")
+        self.assertIn("email", response.data["field_types"], "Ответ не содержит ключ 'email'")
+        self.assertIn("phone", response.data["field_types"], "Ответ не содержит ключ 'phone'")
+        self.assertIn("nonexistent_field", response.data["field_types"], "Ответ не содержит ключ 'nonexistent_field'")
+
+        self.assertEqual(response.data["field_types"]["email"], "email")
+        self.assertEqual(response.data["field_types"]["phone"], "phone")
+        self.assertEqual(response.data["field_types"]["nonexistent_field"], "text")
+
 
     @classmethod
     def tearDownClass(cls):

@@ -28,7 +28,7 @@ class FormMatchingView(APIView):
                     'application/json': {
                         'email': 'email',
                         'phone': 'phone',
-                        'order_date': 'date',
+                        'date': 'date',
                     }
                 }
             ),
@@ -43,18 +43,22 @@ class FormMatchingView(APIView):
         """
         Рендеринг HTML-формы для ввода данных.
         """
-        return render(request, 'index.html') 
+        return render(request, 'index.html')
 
     def post(self, request, *args, **kwargs):
         serializer = FormInputSerializer(data=request.data)
         if serializer.is_valid():
             input_fields = serializer.validated_data['fields']
             matching_template = find_matching_template(input_fields)
+
             if matching_template:
                 return Response({"template_name": matching_template}, status=status.HTTP_200_OK)
             else:
                 field_types = {field: detect_field_type(value) for field, value in input_fields.items()}
-                return Response(field_types, status=status.HTTP_200_OK)
+                return Response({
+                    "message": "Шаблон не найден, типы полей определены.",
+                    "field_types": field_types
+                }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
