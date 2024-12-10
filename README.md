@@ -42,3 +42,9 @@ docker-compose up --build
 
 - http://127.0.0.1:8000/redoc/ (Redoc)
 - http://127.0.0.1:8000/swagger/ (Swagger)
+
+## Структура проекта
+- database — базада данных tiny db
+- config — конфигурация проекта
+- modules.forms — приложение для форм
+- templates — директория для хранения HTML-шаблонов, используемых для отображения форм.
