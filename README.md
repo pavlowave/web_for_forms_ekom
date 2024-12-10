@@ -25,7 +25,7 @@ cd web_for_forms_ekom
 
 ```
 DEBUG=True
-SECRET_KEY=your_secret_key
+SECRET_KEY='i_22eto6s8g+&c8)nyyfa9e_7(l==(sfbvm7+q9d=bd#jv!q5'
 ```
 
 3. Запустите проект c помощью Docker:
@@ -34,7 +34,7 @@ SECRET_KEY=your_secret_key
 docker-compose up --build
 ```
 
-4. Приложение будет доступно по адресу http://127.0.0.1:8000
+4. Приложение будет доступно по адресу http://127.0.0.1:8000/get_form/
 
 ## Использование
 
