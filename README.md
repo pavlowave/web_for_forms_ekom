@@ -39,4 +39,5 @@ docker-compose up --build
 
 Документация API доступна по адресу:
 
-- http://127.0.0.1:8000/api/schema/redoc/ (Redoc)
+- http://127.0.0.1:8000/redoc/ (Redoc)
+- http://127.0.0.1:8000/swagger/ (Swagger)
