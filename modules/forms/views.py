@@ -38,13 +38,6 @@ class FormMatchingView(APIView):
             )
         }
     )
-
-    def get(self, request, *args, **kwargs):
-        """
-        Рендеринг HTML-формы для ввода данных.
-        """
-        return render(request, 'index.html')
-
     def post(self, request, *args, **kwargs):
         serializer = FormInputSerializer(data=request.data)
         if serializer.is_valid():
@@ -61,6 +54,26 @@ class FormMatchingView(APIView):
                 }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        operation_summary='Рендеринг HTML-формы для ввода данных',
+        operation_description='Представление формы ввода для сбора данных.',
+        responses={
+            200: openapi.Response(
+                description='Форма для ввода данных',
+                examples={'text/html': '<html><body><form>...</form></body></html>'}
+            ),
+        }
+    )
+    def get(self, request, *args, **kwargs):
+        """
+        Рендеринг HTML-формы для ввода данных.
+        """
+        return render(request, 'index.html')
+    def get(self, request, *args, **kwargs):
+        """
+        Рендеринг HTML-формы для ввода данных.
+        """
+        return render(request, 'index.html')
 
 def detect_field_type(value):
     """
