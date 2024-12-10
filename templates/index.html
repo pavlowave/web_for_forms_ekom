@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web-приложение для определения заполненных форм</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .field { margin-bottom: 10px; }
+        .available-fields { margin-bottom: 20px; }
+        .field-name { cursor: pointer; color: blue; text-decoration: underline; }
+        .custom-field { margin-top: 20px; }
+    </style>
+    <script>
+        const availableFields = {
+            "Order Form": ["email", "phone", "date"],
+            "User Registration": ["email", "user_name", "date"],
+            "Contact Form": ["user_name", "email", "phone"]
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderAvailableFields();
+        });
+
+        function renderAvailableFields() {
+            const listContainer = document.getElementById('field-list');
+            listContainer.innerHTML = '';
+
+            Object.entries(availableFields).forEach(([templateName, fields]) => {
+                const templateDiv = document.createElement('div');
+                templateDiv.className = 'template';
+
+                const templateTitle = document.createElement('h3');
+                templateTitle.textContent = templateName;
+
+                const fieldList = document.createElement('ul');
+                fields.forEach(field => {
+                    const fieldItem = document.createElement('li');
+                    fieldItem.textContent = field;
+                    fieldItem.className = 'field-name';
+                    fieldItem.onclick = () => addField(field);
+                    fieldList.appendChild(fieldItem);
+                });
+
+                templateDiv.appendChild(templateTitle);
+                templateDiv.appendChild(fieldList);
+                listContainer.appendChild(templateDiv);
+            });
+        }
+
+        function addField(fieldName = '') {
+            const fieldsContainer = document.getElementById('fields');
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'field';
+
+            const inputName = document.createElement('input');
+            inputName.type = 'text';
+            inputName.value = fieldName;
+            inputName.placeholder = 'Field name';
+            inputName.name = 'field_name';
+            inputName.readOnly = !!fieldName;
+
+            const inputValue = document.createElement('input');
+            inputValue.type = 'text';
+            inputValue.placeholder = 'Field value';
+            inputValue.name = 'field_value';
+
+            fieldDiv.appendChild(inputName);
+            fieldDiv.appendChild(inputValue);
+
+            fieldsContainer.appendChild(fieldDiv);
+        }
+
+        function addCustomField() {
+            addField();
+        }
+
+        function clearForm() {
+            const fieldsContainer = document.getElementById('fields');
+            fieldsContainer.innerHTML = '';
+            document.getElementById('result').textContent = '';
+        }
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            const fields = Array.from(document.querySelectorAll('#fields .field')).reduce((acc, field) => {
+                const fieldName = field.querySelector('[name="field_name"]').value;
+                const fieldValue = field.querySelector('[name="field_value"]').value;
+                if (fieldName) acc[fieldName] = fieldValue;
+                return acc;
+            }, {});
+
+            const response = await fetch('/get_form/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fields }),
+            });
+
+            const result = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Web-приложение для определения заполненных форм</h1>
+    <h2>Валидируется 4 типа данных полей, остальные кастомные, будут text.
+        1)Дата
+        2)Телефон
+        3)Email
+        4)Текст
+        </h2>
+    <div class="available-fields">
+        <h2>Доступные формы:</h2>
+        <div id="field-list"></div>
+    </div>
+    <form id="dynamic-form" onsubmit="handleSubmit(event)">
+        <div id="fields">
+        </div>
+        <button type="button" onclick="addCustomField()">Добавить своё поле</button>
+        <button type="button" onclick="clearForm()">Очистить</button>
+        <button type="submit">Проверить</button>
+    </form>
+    <h2>Ответ:</h2>
+    <pre id="result"></pre>
+</body>
+</html>

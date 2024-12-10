@@ -1,0 +1,28 @@
+{
+    "_default": {
+        "1": {
+            "name": "Order Form",
+            "fields": {
+                "email": "email",
+                "phone": "phone",
+                "order_date": "date"
+            }
+        },
+        "2": {
+            "name": "User Registration",
+            "fields": {
+                "email": "email",
+                "user_name": "text",
+                "birth_date": "date"
+            }
+        },
+        "3": {
+            "name": "Contact Form",
+            "fields": {
+                "user_name": "text",
+                "lead_email": "email",
+                "phone": "phone"
+            }
+        }
+    }
+}
