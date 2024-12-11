@@ -6,8 +6,7 @@
 [![Django](https://img.shields.io/badge/django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Django Rest Framework](https://img.shields.io/badge/django_rest_framework-0C4B33?style=for-the-badge&logo=django&logoColor=white)](https://www.django-rest-framework.org/)
 [![TinyDB](https://img.shields.io/badge/tinydb-%234CAF50.svg?style=for-the-badge&logo=tinydb&logoColor=white)](https://tinydb.readthedocs.io/)
-
-
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 </div>
 
 Выполнено в рамках [тестового задания](https://app.affine.pro/workspace/f6dfe706-59c0-41e5-898b-9d6a25d84efe/F20QnCRuwfcgPkZeQb9UH)
