@@ -69,11 +69,7 @@ class FormMatchingView(APIView):
         Рендеринг HTML-формы для ввода данных.
         """
         return render(request, 'index.html')
-    def get(self, request, *args, **kwargs):
-        """
-        Рендеринг HTML-формы для ввода данных.
-        """
-        return render(request, 'index.html')
+
 
 def detect_field_type(value):
     """
